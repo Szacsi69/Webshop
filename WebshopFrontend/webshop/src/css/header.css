@@ -1,0 +1,9 @@
+.nav-link:hover {
+/*  border-radius: 10px 0px 10px 0px; */
+    background-color: #00adff;
+}
+
+.navbar-nav img {
+    height: 35px;
+    width: auto;
+}

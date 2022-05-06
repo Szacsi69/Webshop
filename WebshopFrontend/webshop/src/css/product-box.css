@@ -1,0 +1,26 @@
+.product-box img#productImg {
+    height: 150px;
+    width: 150px;
+}
+
+.product-box img#ratingImg {
+    height: 25px;
+    width: 150px;
+}
+
+.product-box p {
+    color: black;
+    text-decoration: none;
+    display: -webkit-box;
+    max-width: 150px;
+    height: 75px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-box a { 
+    text-decoration: none; 
+    color: black;
+}
+.product-box a:hover { text-decoration: underline; }

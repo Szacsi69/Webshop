@@ -1,0 +1,19 @@
+img#cartIcon {
+    height: 75px;
+    width: auto;
+    background: #ffffff;
+}
+
+img#productImg {
+    height: 350px;
+    width: 350px;
+}
+
+img#ratingImg {
+    height: 40px;
+    width: 200px;
+}
+
+#blueContainer {
+    background: #00adff;
+}
