@@ -12,6 +12,15 @@
     color: #FFFFFF;
 }
 
+.custom-btn:hover {
+    background-color: #008bcc;
+}
+
+.custom-btn:focus {
+    background-color: #008bcc;
+    color: #ffffff;
+}
+
 .user-profile-pic {
     width: 75%;
 }

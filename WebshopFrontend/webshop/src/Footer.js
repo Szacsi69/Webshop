@@ -7,11 +7,11 @@ function Footer() {
             <div className="container-fluid">
                 <div className="text-center">
                     <div className="row d-flex align-items-center">
-                        <div className="col-xl-5 col-12">
+                        <div className="col-xl-4 col-12">
                             <img src={logo_footer} />
                         </div>
-                        <div className="col-xl-3 col-12">
-                            <p className="border-bottom font-weight-bold">Elérhetőségeink</p>
+                        <div className="col-xl-4 col-12">
+                            <p className="border-bottom fw-bold">Elérhetőségeink</p>
                             <p>
                                 Tel.: 06201234567<br />
                                 Email: email@email.com<br />
@@ -19,7 +19,7 @@ function Footer() {
                             </p>
                         </div>
                         <div className="col-xl-4 col-12">
-                            <h5 className="text-nowrap">&copy; 2022 - Webshop - Minden jog fenntartva.</h5>
+                            <h6 className="text-nowrap">&copy; 2022 - Webshop - Minden jog fenntartva.</h6>
                         </div>
                     </div>
                 </div>

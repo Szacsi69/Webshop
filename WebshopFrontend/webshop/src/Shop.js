@@ -11,12 +11,13 @@ function Shop() {
     const [filters, setFilters] = useState(null);
     const [products, setProducts] = useState(null);
 
-    const [productUrl, setProductUrl] = useState(`https://localhost:44397/Shop/${category}`);
     const productBaseUrl = `https://localhost:44397/Shop/${category}`;
+    const [productUrl, setProductUrl] = useState(productBaseUrl);
+    
 
     useEffect(() => {
-        const urlFilter = `https://localhost:44397/Shop/filters/${category}`;
-        fetch(urlFilter)
+        const urlStart = `https://localhost:44397/Shop/${category}/all`;
+        fetch(urlStart)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(
@@ -25,8 +26,9 @@ function Shop() {
                 }
                 return response.json();
             })
-            .then((filters) => {
-                setFilters(filters);
+            .then((response) => {
+                setFilters(response.filters);
+                setProducts(response.products);
             })
             .catch((err) => {
                 console.log(err.message);
@@ -54,7 +56,7 @@ function Shop() {
                 });
     },
         [productUrl]
-    );   
+    );
 
     function filter(checked) {
         var url = productBaseUrl;
@@ -75,11 +77,13 @@ function Shop() {
         <div className="container-fluid">
             <div className="row">
                 <div className=" col-2-md col-3">
+                   { !filters && <div className="text-center">Loading filters...</div>}
                    { filters &&
                     <FilterSection filters={filters} filterFunc={filter}/>
                    }
                 </div>
                 <div className=" col-10-md col-9">
+                    { !products && <div className="text-center">Loading products...</div>}
                     { products &&
                     <ProductSection products={products} />
                     }

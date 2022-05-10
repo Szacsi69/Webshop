@@ -38,12 +38,12 @@ namespace Webshop.Controllers
             return Ok(item);
         }
 
-        [HttpGet("filters/homeappliances")]
-        public async Task<ActionResult<List<ShopFilter>>> GetHomeApplianceFilters()
+        [HttpGet("homeappliances/all")]
+        public async Task<ActionResult<List<ShopFilter>>> GetHomeAppliancesWithFilters()
         {
             var items = await _repository.GetHomeAppliances(new HomeApplianceFilter());
             var filters = ShopFilterFactory.GetHomeApplianceFilters(items);
-            return Ok(filters);
+            return Ok(new { Products = items, Filters = filters });
         }
     }
 }

@@ -4,7 +4,9 @@ import userIcon from './img/user_icon.png';
 import {Nav, Navbar} from 'react-bootstrap';
 import './css/header.css'; 
 
-function Header() {
+
+function Header({ loggedIn }) {
+
     return (
         <header>
             <div className="container-fluid">
@@ -25,12 +27,22 @@ function Header() {
                             </Nav>
                         </Navbar.Collapse>
                     </Navbar>
-                    <Navbar expand bg="light" className="ps-0 col-xl-1 col-3">
-                        <Nav className="ms-auto">
-                            <Nav.Link><img src={cartIcon} /></Nav.Link>
-                            <Nav.Link href="/login"><img src={userIcon} /></Nav.Link>
-                        </Nav>
-                    </Navbar>
+                    { loggedIn &&
+                        <Navbar expand bg="light" className="ps-0 col-xl-1 col-3">
+                            <Nav className="ms-auto">
+                                <Nav.Link><img src={cartIcon} /></Nav.Link>
+                                <Nav.Link href="/account"><img src={userIcon} /></Nav.Link>
+                            </Nav>
+                        </Navbar>
+                    }
+                    { !loggedIn &&
+                        <Navbar expand bg="light" className="ps-0 col-xl-1 col-3">
+                            <Nav className="ms-auto">
+                                <Nav.Link><img src={cartIcon} /></Nav.Link>
+                                <Nav.Link href="/login"><img src={userIcon} /></Nav.Link>
+                            </Nav>
+                        </Navbar>
+                    }
                 </div>
             </div>
         </header>

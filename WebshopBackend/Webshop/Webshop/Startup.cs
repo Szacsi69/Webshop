@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Webshop.Authentication;
 using Webshop.Data;
 using Webshop.Repositories;
 
@@ -39,11 +40,14 @@ namespace Webshop
                     {
                         builder.WithOrigins("http://localhost:3000")
                                             .AllowAnyHeader()
-                                            .AllowAnyMethod();
+                                            .AllowAnyMethod()
+                                            .AllowCredentials();
                     });
             });
 
             services.AddScoped<IWebshopRepository, WebshopRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<JwtService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
