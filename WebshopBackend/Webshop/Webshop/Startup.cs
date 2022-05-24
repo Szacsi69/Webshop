@@ -12,9 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Webshop.Authentication;
-using Webshop.Data;
-using Webshop.Repositories;
+using Webshop.DAL.AppDbContext;
+using Webshop.DAL.Repositories;
+using Webshop.Services;
 
 namespace Webshop
 {
@@ -45,8 +45,17 @@ namespace Webshop
                     });
             });
 
-            services.AddScoped<IWebshopRepository, WebshopRepository>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ICustomersRepository, CustomersRepository>();
+
+            services.AddScoped<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IHomeAppliancesRepository, HomeAppliancesRepository>();
+            services.AddScoped<IComputersRepository, ComputersRepository>();
+            services.AddScoped<ITelephonesRepository, TelephonesRepository>();
+            services.AddScoped<IGardenToolsRepository, GardenToolsRepository>();
+
+            services.AddScoped<IOrdersRepository, OrdersRepository>();
+            services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
+
             services.AddScoped<JwtService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>

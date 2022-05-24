@@ -1,0 +1,26 @@
+.form-container {
+    width: 50%;
+    margin: auto;
+}
+
+.background-div {
+    background: url(../../../img/bckg.png);
+}
+
+.custom-btn {
+    background-color: #00adff;
+    color: #FFFFFF;
+}
+
+.custom-btn:hover {
+    background-color: #008bcc;
+}
+
+.custom-btn:focus {
+    background-color: #008bcc;
+    color: #ffffff;
+}
+
+.user-profile-pic {
+    width: 75%;
+}

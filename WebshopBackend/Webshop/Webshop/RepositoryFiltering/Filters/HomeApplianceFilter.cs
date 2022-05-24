@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Webshop.Controllers.FilterDtos;
+using Webshop.DAL.AppDbContext;
 using Webshop.Models;
 
 namespace Webshop.RepositoryFilters
@@ -17,29 +19,45 @@ namespace Webshop.RepositoryFilters
             CubicCapacities = new List<IntervalCondition>();
         }
 
+        public HomeApplianceFilter(HomeApplianceFilterDto dto) : base(dto)
+        {
+            EnergyClasses = new List<EqualityCondition>();
+            CubicCapacities = new List<IntervalCondition>();
+
+            foreach (var s in dto.EnergyClass)
+            {
+                EnergyClasses.Add(ExtractEqualityCondition(s));
+            }
+
+            foreach (var s in dto.CubicCapacity)
+            {
+                CubicCapacities.Add(ExtractIntervalCondition(s));
+            }
+        }
+
         public List<EqualityCondition> EnergyClasses { get; set; }
         public List<IntervalCondition> CubicCapacities { get; set; }
 
 
-        public new ExpressionStarter<HomeAppliance> CreateExpression()
+        public new ExpressionStarter<DbHomeAppliance> CreateExpression()
         {
-            var pbPrice = PredicateBuilder.New<HomeAppliance>(true);
+            var pbPrice = PredicateBuilder.New<DbHomeAppliance>(true);
             foreach (var p in Prices)
             {
-                pbPrice.Or(h => (p.LsThan == null || h.Price < p.LsThan) && (p.GtThan == null || p.GtThan < h.Price));
+                pbPrice.Or(h => (p.LsThan == null || h.Price <= p.LsThan) && (p.GtThan == null || p.GtThan <= h.Price));
             }
-            var pbManufacturer = PredicateBuilder.New<HomeAppliance>(true);
+            var pbManufacturer = PredicateBuilder.New<DbHomeAppliance>(true);
             foreach (var m in Manufacturers)
             {
-                pbManufacturer.Or(h => h.Manufacturer.ToLower() == m.Value);
+                pbManufacturer.Or(h => h.Manufacturer == m.Value);
             }
 
-            var pbEnergyClass = PredicateBuilder.New<HomeAppliance>(true);
+            var pbEnergyClass = PredicateBuilder.New<DbHomeAppliance>(true);
             foreach (var e in EnergyClasses)
             {
-                pbEnergyClass.Or(h => h.EnergyClass.ToLower() == e.Value);
+                pbEnergyClass.Or(h => h.EnergyClass == e.Value);
             }
-            var pbCubicCapacity = PredicateBuilder.New<HomeAppliance>(true);
+            var pbCubicCapacity = PredicateBuilder.New<DbHomeAppliance>(true);
             foreach (var c in CubicCapacities)
             {
                 pbCubicCapacity.Or(h => (c.LsThan == null || h.CubicCapacity < c.LsThan) && (c.GtThan == null || c.GtThan < h.CubicCapacity));

@@ -1,0 +1,23 @@
+.item-icon {
+    height: auto;
+    width: 65px;
+}
+
+.delete-icon {
+    height: auto;
+    width: 40px;
+}
+
+.delete-btn:hover {
+    background-color: #990000;
+}
+
+.blue-container {
+    color: #ffffff;
+    background-color: #00adff;
+}
+
+.blue-table {
+    color: #ffffff;
+    background-color: #008bcc;
+}

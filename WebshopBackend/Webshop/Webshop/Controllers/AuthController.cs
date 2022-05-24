@@ -4,56 +4,54 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Webshop.Authentication;
+using Webshop.Services;
 using Webshop.Authentication.Dtos;
 using Webshop.Dtos;
 using Webshop.Models;
-using Webshop.Repositories;
+using Webshop.DAL.Repositories;
 
 namespace Webshop.Controllers
 {
-    [Route("[controller]")]
+    [Route("auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
 
-        private readonly ICustomerRepository _repository;
+        private readonly ICustomersRepository _repository;
         private readonly JwtService _jwtService;
 
-        public AuthController(ICustomerRepository repository, JwtService jwtService)
+        public AuthController(ICustomersRepository repository, JwtService jwtService)
         {
             _repository = repository;
             _jwtService = jwtService;
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterDto dto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Register(RegisterDto dto)
         {
-            if (_repository.GetByLoginName(dto.UserName) != null)
+            dto.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            try
             {
-                return BadRequest(new { message = "Ez a felhasználónévvel már létezik fiók!" });
+                var created = await _repository.Insert(dto);
+                return Created("Success!", created);
             }
-
-            if (_repository.GetByEmail(dto.Email) != null)
+            catch (Exception e)
             {
-                return BadRequest(new { message = "Ezzel az email címmel már létezik fiók!" });
+               return BadRequest(new { error = e.Message });
             }
-            var customer = new Customer
-            {
-                LoginName = dto.UserName,
-                EmailAddress = dto.Email,
-                LoginPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password)
-            };
-            var created = _repository.CreateCustomer(customer);
-            return Created("success", created);
+            
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginDto dto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Login(LoginDto dto)
         {
-            var customer = _repository.GetByLoginName(dto.UserName);
+            var customer = await _repository.GetByUserName(dto.UserName);
             if (customer == null) return BadRequest(new { message = "Érvénytelen felhasználónév vagy jelszó." });
-            if (!BCrypt.Net.BCrypt.Verify(dto.Password, customer.LoginPassword))
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, customer.Password))
                 return BadRequest(new { message = "Érvénytelen felhasználónév vagy jelszó." });
 
             var jwt = _jwtService.Generate(customer.Id);
@@ -62,11 +60,13 @@ namespace Webshop.Controllers
                 HttpOnly = true
             });
 
-            return Ok(new { message = "success" });
+            return Ok(new { message = "Success!" });
         }
 
         [HttpGet("customer")]
-        public IActionResult Customer()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Customer()
         {
             try
             {
@@ -74,7 +74,7 @@ namespace Webshop.Controllers
                 var token = _jwtService.Verify(jwt);
                 int customerId = Int32.Parse(token.Issuer);
 
-                var customer = _repository.GetById(customerId);
+                var customer = await _repository.GetById(customerId);
                 return Ok(customer);
             }
             catch (Exception _)
@@ -84,7 +84,9 @@ namespace Webshop.Controllers
         }
 
         [HttpPost("save")]
-        public IActionResult SaveCustomerData(CustomerDto dto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> SaveCustomerData(CustomerDto dto)
         {
             int customerId;
             try
@@ -97,33 +99,20 @@ namespace Webshop.Controllers
             {
                 return Unauthorized();
             }
-            var customerOld = _repository.GetById(customerId);
-            var customerNew = new Customer
-            {
-                Id = customerId,
-                FullName = dto.FullName,
-                Gender = dto.Gender,
-                LoginName = customerOld.LoginName,
-                LoginPassword = customerOld.LoginPassword,
-                EmailAddress = dto.Email,
-                PhoneNumber = dto.PhoneNumber,
-                AddressLine = dto.Address,
-                Town_City = dto.City,
-                County = dto.County,
-                Country = dto.Country
-            };
-            var customer = _repository.UpdateCustomer(customerNew);
+            
+            var customer = await _repository.Update(dto, customerId);
             return Ok(customer);
         }
 
         [HttpPost("logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Logout()
         {
             Response.Cookies.Delete(key: "jwt");
 
             return Ok(new
             {
-                message = "success"
+                message = "Success!"
             });
         }
     }

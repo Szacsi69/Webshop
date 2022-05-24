@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
-import Home from './Home';
-import AboutUs from './AboutUs';
-import Login from './Login';
-import Register from './Register';
-import Account from './Account';
-import Shop from './Shop';
-import Details from './Details';
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Home from './components/home/Home';
+import AboutUs from './components/aboutus/AboutUs';
+import Login from './components/account/Login';
+import Register from './components/account/Register';
+import Account from './components/account/Account';
+import Shop from './components/shop/Shop';
+import Details from './components/details/Details';
+import Cart from './components/cart/Cart';
 
 import { useState, useEffect } from 'react';
 
@@ -43,6 +44,7 @@ function App() {
                 <Routes>
                     <Route exact path="/" element={<Home />} />
                     <Route exact path="/shop/:category" element={<Shop />} />
+                    <Route exact path="/cart" element={<Cart />} />
                     <Route exact path="/aboutus" element={<AboutUs />} />
                     <Route exact path="/register" element={<Register />} />
                     <Route exact path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
